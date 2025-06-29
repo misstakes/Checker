@@ -1,6 +1,12 @@
 const express = require('express');
 const http = require('http');
-const socketIO = require('socket.io');
+const io = socketIO(server, {
+  cors: {
+    origin: "*", // ✅ Or use your Render domain for tighter security
+    methods: ["GET", "POST"]
+  }
+});
+
 const path = require('path');
 
 const app = express();
