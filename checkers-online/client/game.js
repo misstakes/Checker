@@ -2,7 +2,8 @@ let timerInterval = null;
 let timeLeft = 30;
 const timeDisplay = document.getElementById("timeLeft");
 
-const socket = io();
+const socket = io(window.location.origin); // ✅ works both locally and on Render
+
 const boardDiv = document.getElementById('board');
 const status = document.getElementById('status');
 
