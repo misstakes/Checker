@@ -2,8 +2,81 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Checkers - Select Mode</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      height: 100vh;
+      background: linear-gradient(135deg, #1c1c1c, #333);
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .landing-container {
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 30px;
+      color: #f9f9f9;
+    }
+
+    .mode-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .mode-buttons button {
+      padding: 14px 24px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 10px;
+      background: crimson;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+      transition: background 0.3s ease, transform 0.2s;
+    }
+
+    .mode-buttons button:hover {
+      background: #b3002d;
+      transform: scale(1.03);
+    }
+
+    .mode-buttons a button {
+      background: #007bff;
+    }
+
+    .mode-buttons a button:hover {
+      background: #0056b3;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 500px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .mode-buttons button {
+        font-size: 1rem;
+        padding: 12px 20px;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="landing-container">
@@ -11,11 +84,9 @@
     <div class="mode-buttons">
       <button onclick="startGame('local')">🎮 Local Multiplayer</button>
       <button onclick="startGame('bot')">🤖 Play vs Bot</button>
-      <!-- Add this inside the body -->
-<a href="lobby.html">
-  <button>Play Online</button>
-</a>
-
+      <a href="lobby.html">
+        <button>🌐 Play Online</button>
+      </a>
     </div>
   </div>
 
