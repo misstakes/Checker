@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Checkers Online</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    #forfeitBtn {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #c0392b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #forfeitBtn:hover {
+      background-color: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+  <h1>Online Checkers</h1>
+  <div id="status">Waiting for player...</div>
+  <div id="timer">Time left ⏳ : <span id="timeLeft">30</span>s</div>
+
+  <div id="board"></div>
+  <button id="forfeitBtn">Forfeit Game</button>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

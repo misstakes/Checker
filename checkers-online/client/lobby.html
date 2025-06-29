@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkers Lobby</title>
+  <link rel="stylesheet" href="lobby.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🧠 Checkers Lobby</h1>
+
+    <div class="options">
+      <button id="joinRandomBtn">Join Random Match</button>
+
+      <div class="private-room">
+        <h2>🔒 Private Room</h2>
+        <button id="createRoomBtn">Create Room</button>
+
+        <div class="join-section">
+          <input type="text" id="roomCodeInput" placeholder="Enter room code" />
+          <button id="joinRoomBtn">Join Room</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="roomCodeDisplay" class="hidden">
+      <p>✅ Room created! Share this code with your opponent:</p>
+      <input type="text" id="generatedCode" readonly />
+      <button id="copyBtn">📋 Copy Code</button>
+      <button id="proceedBtn">➡️ Proceed to Game</button>
+    </div>
+  </div>
+
+  <script>
+    const joinRandomBtn = document.getElementById("joinRandomBtn");
+    const createRoomBtn = document.getElementById("createRoomBtn");
+    const joinRoomBtn = document.getElementById("joinRoomBtn");
+    const roomCodeInput = document.getElementById("roomCodeInput");
+    const roomCodeDisplay = document.getElementById("roomCodeDisplay");
+    const generatedCode = document.getElementById("generatedCode");
+    const copyBtn = document.getElementById("copyBtn");
+    const proceedBtn = document.getElementById("proceedBtn");
+
+    joinRandomBtn.addEventListener("click", () => {
+      window.location.href = "/online.html?mode=random";
+    });
+
+    createRoomBtn.addEventListener("click", () => {
+      const code = Math.random().toString(36).substr(2, 6).toUpperCase();
+      generatedCode.value = code;
+      roomCodeDisplay.classList.remove("hidden");
+
+      localStorage.setItem("roomCode", code);
+    });
+
+    copyBtn.addEventListener("click", () => {
+      generatedCode.select();
+      document.execCommand("copy");
+      copyBtn.textContent = "✅ Copied!";
+      setTimeout(() => (copyBtn.textContent = "📋 Copy Code"), 2000);
+    });
+
+    proceedBtn.addEventListener("click", () => {
+      const room = generatedCode.value;
+      if (room) {
+        window.location.href = `/online.html?room=${room}`;
+      }
+    });
+
+    joinRoomBtn.addEventListener("click", () => {
+      const room = roomCodeInput.value.trim().toUpperCase();
+      if (room) {
+        localStorage.setItem("roomCode", room);
+        window.location.href = `/online.html?room=${room}`;
+      }
+    });
+  </script>
+</body>
+</html>

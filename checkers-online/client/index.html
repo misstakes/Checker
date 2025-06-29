@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Checkers - Select Mode</title>
+  <link rel="stylesheet" href="style1.css" />
+</head>
+<body>
+  <div class="landing-container">ss
+    <h1>Welcome to Checkers</h1> 
+    <div class="mode-buttons">
+      <button onclick="startGame('local')">🎮 Local Multiplayer</button>
+      <button onclick="startGame('bot')">🤖 Play vs Bot</button>
+      <!-- Add this inside the body -->
+<a href="lobby.html">
+  <button>Play Online</button>
+</a>
+
+    </div>
+  </div>
+
+  <script>
+    function startGame(mode) {
+      localStorage.setItem("gameMode", mode);
+      window.location.href = "online.html";
+    }
+  </script>
+</body>
+</html>
