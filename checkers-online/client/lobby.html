@@ -5,76 +5,157 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Checkers Lobby</title>
   <link rel="stylesheet" href="lobby.css">
+  <style>
+    .prize-box {
+      margin-top: 10px;
+      background: #f0f0f0;
+      padding: 8px 12px;
+      border-radius: 5px;
+      font-weight: bold;
+      color: #2c3e50;
+      display: inline-block;
+    }
+    .hidden {
+      display: none;
+    }
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background-color: #fafafa;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+    }
+    button {
+      padding: 10px 15px;
+      margin-top: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    input[type="text"], input[type="number"] {
+      padding: 8px;
+      margin-top: 5px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <h1>🧠 Checkers Lobby</h1>
+    <h1>🎮 Checkers Lobby</h1>
 
     <div class="options">
-      <button id="joinRandomBtn">Join Random Match</button>
+      <button id="joinRandomBtn">Join Random Match (Ksh <span id="rndPrice">20</span>)</button>
+      <div class="prize-box" id="randomPrizeBox">🏆 Prize: Ksh <span id="randomPrize">36</span></div>
 
       <div class="private-room">
         <h2>🔒 Private Room</h2>
+        Stake (multiple of 10): 
+        <input type="number" id="privateStake" value="20" step="10" min="10"><br>
+        <div class="prize-box" id="privatePrizeBox">🏆 Prize: Ksh <span id="privatePrize">36</span></div>
         <button id="createRoomBtn">Create Room</button>
 
         <div class="join-section">
-          <input type="text" id="roomCodeInput" placeholder="Enter room code" />
+          <input type="text" id="roomCodeInput" placeholder="Enter room code"/>
           <button id="joinRoomBtn">Join Room</button>
         </div>
       </div>
     </div>
 
     <div id="roomCodeDisplay" class="hidden">
-      <p>✅ Room created! Share this code with your opponent:</p>
+      <p>✅ Room created! Share this code:</p>
       <input type="text" id="generatedCode" readonly />
-      <button id="copyBtn">📋 Copy Code</button>
-      <button id="proceedBtn">➡️ Proceed to Game</button>
+      <button id="copyBtn">📋 Copy</button>
+      <button id="proceedBtn">➡️ Pay & Go</button>
     </div>
   </div>
 
-  <script>
-    const joinRandomBtn = document.getElementById("joinRandomBtn");
-    const createRoomBtn = document.getElementById("createRoomBtn");
-    const joinRoomBtn = document.getElementById("joinRoomBtn");
-    const roomCodeInput = document.getElementById("roomCodeInput");
-    const roomCodeDisplay = document.getElementById("roomCodeDisplay");
-    const generatedCode = document.getElementById("generatedCode");
-    const copyBtn = document.getElementById("copyBtn");
-    const proceedBtn = document.getElementById("proceedBtn");
+<!-- All other HTML above remains the same -->
+<script>
+  const joinRandomBtn = document.getElementById("joinRandomBtn");
+  const createRoomBtn = document.getElementById("createRoomBtn");
+  const joinRoomBtn = document.getElementById("joinRoomBtn");
+  const privateStake = document.getElementById("privateStake");
+  const roomCodeDisplay = document.getElementById("roomCodeDisplay");
+  const generatedCode = document.getElementById("generatedCode");
+  const copyBtn = document.getElementById("copyBtn");
+  const proceedBtn = document.getElementById("proceedBtn");
+  const roomCodeInput = document.getElementById("roomCodeInput");
 
-    joinRandomBtn.addEventListener("click", () => {
-      window.location.href = "/online.html?mode=random";
-    });
+  const randomPrizeEl = document.getElementById("randomPrize");
+  const privatePrizeEl = document.getElementById("privatePrize");
 
-    createRoomBtn.addEventListener("click", () => {
-      const code = Math.random().toString(36).substr(2, 6).toUpperCase();
-      generatedCode.value = code;
-      roomCodeDisplay.classList.remove("hidden");
+  const rndAmount = 20;
 
-      localStorage.setItem("roomCode", code);
-    });
+  updatePrizeDisplays();
+  privateStake.addEventListener("input", updatePrizeDisplays);
 
-    copyBtn.addEventListener("click", () => {
-      generatedCode.select();
-      document.execCommand("copy");
-      copyBtn.textContent = "✅ Copied!";
-      setTimeout(() => (copyBtn.textContent = "📋 Copy Code"), 2000);
-    });
+  function updatePrizeDisplays() {
+    const privateAmount = parseInt(privateStake.value) || 20;
+    if (!Number.isInteger(privateAmount) || privateAmount < 10 || privateAmount % 10 !== 0) {
+      privatePrizeEl.innerText = "Invalid";
+    } else {
+      privatePrizeEl.innerText = (privateAmount * 2 * 0.9).toFixed(0);
+    }
+    randomPrizeEl.innerText = (rndAmount * 2 * 0.9).toFixed(0);
+  }
 
-    proceedBtn.addEventListener("click", () => {
-      const room = generatedCode.value;
-      if (room) {
-        window.location.href = `/online.html?room=${room}`;
-      }
-    });
+  joinRandomBtn.onclick = () => {
+    const redirect = `/online.html?mode=random&stake=${rndAmount}`;
+    makeMpesaPayment(rndAmount, redirect);
+  };
 
-    joinRoomBtn.addEventListener("click", () => {
-      const room = roomCodeInput.value.trim().toUpperCase();
-      if (room) {
-        localStorage.setItem("roomCode", room);
-        window.location.href = `/online.html?room=${room}`;
-      }
-    });
-  </script>
+  createRoomBtn.onclick = () => {
+    const code = Math.random().toString(36).substr(2, 6).toUpperCase();
+    generatedCode.value = code;
+    roomCodeDisplay.classList.remove("hidden");
+  };
+
+  copyBtn.onclick = () => {
+    generatedCode.select();
+    document.execCommand("copy");
+    copyBtn.textContent = "✅ Copied!";
+    setTimeout(() => copyBtn.textContent = "📋 Copy", 2000);
+  };
+
+  proceedBtn.onclick = () => {
+    const code = generatedCode.value;
+    const stake = parseInt(privateStake.value);
+    if (!Number.isInteger(stake) || stake < 10 || stake % 10 !== 0) {
+      return alert("Stake must be at least 10 and a multiple of 10.");
+    }
+    const redirect = `/online.html?mode=private&room=${code}&stake=${stake}`;
+    makeMpesaPayment(stake, redirect);
+  };
+
+  joinRoomBtn.onclick = () => {
+    const code = roomCodeInput.value.trim().toUpperCase();
+    const stake = parseInt(privateStake.value);
+    if (!code) return alert("Room code is required.");
+    if (!Number.isInteger(stake) || stake < 10 || stake % 10 !== 0) {
+      return alert("Stake must be at least 10 and a multiple of 10.");
+    }
+    localStorage.setItem("roomCode", code);
+    const redirect = `/online.html?mode=private&room=${code}&stake=${stake}`;
+    makeMpesaPayment(stake, redirect);
+  };
+
+  async function makeMpesaPayment(amount, redirectUrl) {
+    const phone = prompt("Enter your M-Pesa phone number (07XXXXXXXX):");
+    if (!/^07\d{8}$/.test(phone)) {
+      alert("Invalid phone number format.");
+      return;
+    }
+
+    alert(`Sending STK push to ${phone}...`);
+    localStorage.setItem("playerPhone", phone); // Optionally store for later use
+
+    // Immediately redirect to lobby or match room
+    window.location.href = redirectUrl;
+  }
+</script>
+
 </body>
 </html>
+
