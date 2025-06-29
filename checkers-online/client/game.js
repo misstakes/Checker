@@ -1,9 +1,12 @@
+// === TIMER ===
 let timerInterval = null;
 let timeLeft = 30;
 const timeDisplay = document.getElementById("timeLeft");
 
-const socket = io(window.location.origin); // ✅ works both locally and on Render
+// === SOCKET ===
+const socket = io(window.location.origin); // ✅ Works both locally and on Render
 
+// === DOM ===
 const boardDiv = document.getElementById('board');
 const status = document.getElementById('status');
 
@@ -20,6 +23,7 @@ room = isPrivateRoom ? urlParams.get('room') : null;
 
 socket.emit("joinGame", { room, isPrivateRoom });
 
+// === BOARD ===
 function createBoard() {
   boardDiv.innerHTML = '';
   board = [];
@@ -175,6 +179,7 @@ function checkWin() {
   }
 }
 
+// === TIMER ===
 function startTimer() {
   clearInterval(timerInterval);
   timeLeft = 30;
@@ -203,7 +208,7 @@ function handleGameOver(winnerColor) {
   setTimeout(() => location.href = '/lobby.html?result=' + (didWin ? "win" : "lose"), 3000);
 }
 
-// --- Socket Events ---
+// === SOCKET EVENTS ===
 socket.on('waitingForPlayer', () => {
   status.innerText = 'Waiting for another player...';
 });
@@ -231,10 +236,10 @@ socket.on('move', (data) => {
 socket.on('gameOver', ({ winner }) => {
   handleGameOver(winner);
 });
-// Forfeit button logic
+
+// === FORFEIT ===
 document.getElementById("forfeitBtn").addEventListener("click", () => {
   if (gameEnded) return;
-
   const confirmForfeit = confirm("Are you sure you want to forfeit?");
   if (confirmForfeit) {
     socket.emit('forfeit', { room, loser: myColor });
