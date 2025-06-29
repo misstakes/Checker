@@ -4,51 +4,47 @@ html, body {
   height: 100%;
   width: 100%;
   font-family: Arial, sans-serif;
-  background: #2c2c2c;
+  background: #2c2c2c; /* Dark background */
   color: #fff;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  overflow-x: hidden;
-  overflow-y: auto;
+  justify-content: center;
 }
 
 /* Title */
 h1 {
-  font-size: 1.8rem;
-  margin: 20px 0 10px;
+  font-size: 3.5rem;
+  margin: 10px 0;
   color: #f5f5f5;
-  text-align: center;
 }
 
 /* Status and Timer */
-#status,
-#timer {
-  font-size: 1rem;
+#status, #timer {
+  font-size: 2rem;
   margin: 5px 0;
   color: #ccc;
-  text-align: center;
 }
 
 /* Responsive Checkers Board */
 #board {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
+  aspect-ratio: 1 / 1;
   width: 95vw;
   max-width: 95vmin;
-  aspect-ratio: 1 / 1;
+  max-height: 95vmin;
   border: 4px solid #000;
-  background: #000;
   box-shadow: 0 0 15px rgba(0,0,0,0.4);
-  margin-top: 10px;
+  background: #000;
 }
 
 /* Square cell */
 .square {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1;
 }
 
 .light {
@@ -87,19 +83,18 @@ h1 {
 }
 
 .selected {
-  outline: 3px solid yellow;
+  outline: 5px solid yellow;
   box-shadow: 0 0 10px yellow;
 }
 
 .piece.king::after {
   content: "👑";
   position: absolute;
-  top: 5%;
+  top: 20%;
   left: 0;
   right: 0;
   text-align: center;
-  font-size: 1.2em;
-  color: gold;
+  font-size: 7.1em;
 }
 
 /* Rotate board for black player */
@@ -110,50 +105,9 @@ h1 {
   transform: rotate(180deg);
 }
 
-/* Forfeit Button */
-#forfeitBtn {
-  margin-top: 15px;
-  padding: 10px 20px;
-  background: crimson;
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-#forfeitBtn:hover {
-  background: darkred;
-}
-
-/* Better scaling for mobile */
-@media (max-width: 600px) {
-  h1 {
-    font-size: 1.4rem;
-    margin-top: 15px;
-  }
-
-  #status,
-  #timer {
-    font-size: 0.95rem;
-  }
-
-  #forfeitBtn {
-    width: 80%;
-    font-size: 0.95rem;
-    padding: 10px;
-  }
-
-  .piece.king::after {
-    font-size: 1rem;
-  }
-}
-
-/* Adjust height for very short screens */
+/* Extra support for short mobile screens */
 @media (max-height: 500px) {
   #board {
-    width: 90vw;
     height: 90vw;
   }
 }
