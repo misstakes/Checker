@@ -1,38 +1,38 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
-  text-align: center;
+html, body {
   margin: 0;
   padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  color: #333;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
+  justify-content: center;
 }
 
 h1 {
-  margin-top: 20px;
-  color: #333;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
+  margin: 8px 0;
 }
 
-#status {
-  font-size: 18px;
-  margin: 10px 0;
-  color: #444;
+#status, #timer {
+  font-size: 1rem;
+  margin: 4px 0;
 }
 
 #board {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
-  width: 100vw;
-  max-width: 600px;
   aspect-ratio: 1 / 1;
-  margin: 10px auto;
+  width: 95vw;
+  max-width: 95vmin;
+  max-height: 95vmin;
   border: 4px solid #222;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
   background: #222;
-  touch-action: manipulation;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
 .square {
@@ -42,11 +42,11 @@ h1 {
 }
 
 .light {
-  background-color: #d2b48c; /* tan */
+  background-color: #d2b48c;
 }
 
 .dark {
-  background-color: #8b4513; /* saddle brown */
+  background-color: #8b4513;
 }
 
 .piece {
@@ -62,7 +62,7 @@ h1 {
 }
 
 .piece:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .white {
@@ -90,49 +90,17 @@ h1 {
   font-size: 1em;
 }
 
-/* Timer text */
-#timer {
-  font-size: 18px;
-  color: #ff3333;
-  margin-top: 5px;
-}
-
-/* Rotate board for opponent */
+/* Rotated board for black player */
 .rotated {
   transform: rotate(180deg);
 }
-
 .rotated .square {
   transform: rotate(180deg);
 }
 
-/* Mobile optimization */
-@media (max-width: 768px) {
-  h1 {
-    font-size: 1.4rem;
-  }
-
-  #status, #timer {
-    font-size: 1rem;
-  }
-
-  .piece.king::after {
-    font-size: 0.9em;
-  }
-
+/* Responsive fix for very short screens */
+@media (max-height: 500px) {
   #board {
-    width: 96vw;
-    max-width: none;
-    margin: 10px auto;
-  }
-}
-
-@media (max-height: 600px) {
-  body {
-    padding-bottom: 10px;
-  }
-
-  #board {
-    height: 90vw; /* fallback for aspect ratio issues on short screens */
+    height: 90vw;
   }
 }
