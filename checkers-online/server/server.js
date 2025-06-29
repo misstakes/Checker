@@ -72,6 +72,12 @@ io.on('connection', (socket) => {
     delete games[room];
   });
 
+  socket.on('forfeit', ({ room, loser }) => {
+    const winner = loser === 'white' ? 'black' : 'white';
+    io.to(room).emit('gameOver', { winner });
+    delete games[room];
+  });
+
   socket.on('disconnect', () => {
     if (waitingRandomPlayer?.id === socket.id) {
       waitingRandomPlayer = null;
@@ -91,9 +97,4 @@ io.on('connection', (socket) => {
 
 server.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
-});
-socket.on('forfeit', ({ room, loser }) => {
-  const winner = loser === 'white' ? 'black' : 'white';
-  io.to(room).emit('gameOver', { winner });
-  delete games[room];
 });
