@@ -1,24 +1,28 @@
 const express = require('express');
 const http = require('http');
-const io = socketIO(server, {
-  cors: {
-    origin: "*", // ✅ Or use your Render domain for tighter security
-    methods: ["GET", "POST"]
-  }
-});
-
+const socketIO = require('socket.io');
 const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIO(server);
-const PORT = 3000;
+
+// ✅ Only declare io once, with CORS settings for Render
+const io = socketIO(server, {
+  cors: {
+    origin: "*", // You can replace * with your frontend domain for stricter security
+    methods: ["GET", "POST"]
+  }
+});
+
+const PORT = process.env.PORT || 3000;
 
 const games = {};
 let waitingRandomPlayer = null;
 
+// Serve static client files
 app.use(express.static(path.join(__dirname, '../client')));
 
+// Socket.IO connection handler
 io.on('connection', (socket) => {
   socket.on('joinGame', ({ room, isPrivateRoom }) => {
     if (isPrivateRoom && room) {
@@ -32,10 +36,12 @@ io.on('connection', (socket) => {
         startGame(room);
       }
     } else {
+      // Join random match
       if (waitingRandomPlayer) {
         const newRoom = `room-${waitingRandomPlayer.id}-${socket.id}`;
         socket.join(newRoom);
         waitingRandomPlayer.join(newRoom);
+
         games[newRoom] = {
           players: {
             [waitingRandomPlayer.id]: 'white',
@@ -85,10 +91,13 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
+    // Clear waiting player if disconnected
     if (waitingRandomPlayer?.id === socket.id) {
       waitingRandomPlayer = null;
       return;
     }
+
+    // Handle game disconnect
     for (const [room, game] of Object.entries(games)) {
       if (socket.id in game.players) {
         const loserColor = game.players[socket.id];
@@ -101,6 +110,7 @@ io.on('connection', (socket) => {
   });
 });
 
+// Start server
 server.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
