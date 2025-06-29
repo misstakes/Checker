@@ -9,6 +9,7 @@ body {
 h1 {
   margin-top: 20px;
   color: #333;
+  font-size: 1.5rem;
 }
 
 #status {
@@ -19,9 +20,10 @@ h1 {
 
 #board {
   display: grid;
-  grid-template-columns: repeat(8, 60px);
-  grid-template-rows: repeat(8, 60px);
-  width: 480px;
+  grid-template-columns: repeat(8, 1fr);
+  width: 90vw;
+  max-width: 480px;
+  aspect-ratio: 1 / 1;
   margin: 20px auto;
   border: 4px solid #222;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
@@ -29,9 +31,9 @@ h1 {
 }
 
 .square {
-  width: 60px;
-  height: 60px;
   position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
 }
 
 .light {
@@ -43,10 +45,12 @@ h1 {
 }
 
 .piece {
-  width: 44px;
-  height: 44px;
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
   border-radius: 50%;
-  margin: 8px auto;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
   cursor: pointer;
   transition: transform 0.2s ease;
@@ -70,45 +74,48 @@ h1 {
   outline: 3px solid yellow;
   box-shadow: 0 0 10px yellow;
 }
+
 .piece.king::after {
   content: "👑";
   position: absolute;
-  top: 8px;
+  top: 5%;
   left: 0;
   right: 0;
   text-align: center;
-  font-size: 20px;
+  font-size: 0.9em;
 }
 
-/* Mobile friendly */
-@media (max-width: 600px) {
-  #board {
-    width: 300px;
-    grid-template-columns: repeat(8, 37.5px);
-    grid-template-rows: repeat(8, 37.5px);
-  }
-
-  .square {
-    width: 37.5px;
-    height: 37.5px;
-  }
-
-  .piece {
-    width: 30px;
-    height: 30px;
-    margin: 3.75px auto;
-  }
-}
+/* Timer text */
 #timer {
   font-size: 18px;
   color: #ff3333;
   margin-top: 5px;
 }
 
+/* Rotate board for opponent */
 .rotated {
   transform: rotate(180deg);
 }
 
 .rotated .square {
   transform: rotate(180deg);
+}
+
+/* Mobile-friendly typography and scaling */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 1.2rem;
+  }
+
+  #status {
+    font-size: 16px;
+  }
+
+  #timer {
+    font-size: 16px;
+  }
+
+  .piece.king::after {
+    font-size: 0.8em;
+  }
 }
