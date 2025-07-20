@@ -73,88 +73,70 @@
 
 <!-- All other HTML above remains the same -->
 <script>
-  const joinRandomBtn = document.getElementById("joinRandomBtn");
-  const createRoomBtn = document.getElementById("createRoomBtn");
-  const joinRoomBtn = document.getElementById("joinRoomBtn");
-  const privateStake = document.getElementById("privateStake");
-  const roomCodeDisplay = document.getElementById("roomCodeDisplay");
-  const generatedCode = document.getElementById("generatedCode");
-  const copyBtn = document.getElementById("copyBtn");
-  const proceedBtn = document.getElementById("proceedBtn");
-  const roomCodeInput = document.getElementById("roomCodeInput");
+  document.addEventListener("DOMContentLoaded", function () {
+    async function makeMpesaPayment(amount, redirectUrl) {
+      const phone = prompt("Enter your M-Pesa phone number (07XXXXXXXX):");
+      if (!/^07\d{8}$/.test(phone)) {
+        alert("Invalid phone number format.");
+        return;
+      }
 
-  const randomPrizeEl = document.getElementById("randomPrize");
-  const privatePrizeEl = document.getElementById("privatePrize");
+      const payload = {
+        phone,
+        amount,
+        redirect: redirectUrl
+      };
 
-  const rndAmount = 20;
+      try {
+        alert("Initiating payment, please wait...");
 
-  updatePrizeDisplays();
-  privateStake.addEventListener("input", updatePrizeDisplays);
+        const form = document.createElement('form');
+        form.method = 'POST';
+       form.action = '/x/Checker-main/checkers-online/client/SubmitOrderRequest.php';
 
-  function updatePrizeDisplays() {
-    const privateAmount = parseInt(privateStake.value) || 20;
-    if (!Number.isInteger(privateAmount) || privateAmount < 10 || privateAmount % 10 !== 0) {
-      privatePrizeEl.innerText = "Invalid";
-    } else {
-      privatePrizeEl.innerText = (privateAmount * 2 * 0.9).toFixed(0);
-    }
-    randomPrizeEl.innerText = (rndAmount * 2 * 0.9).toFixed(0);
-  }
 
-  joinRandomBtn.onclick = () => {
-    const redirect = `/online.html?mode=random&stake=${rndAmount}`;
-    makeMpesaPayment(rndAmount, redirect);
-  };
 
-  createRoomBtn.onclick = () => {
-    const code = Math.random().toString(36).substr(2, 6).toUpperCase();
-    generatedCode.value = code;
-    roomCodeDisplay.classList.remove("hidden");
-  };
+        for (const key in payload) {
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = key;
+          input.value = payload[key];
+          form.appendChild(input);
+        }
 
-  copyBtn.onclick = () => {
-    generatedCode.select();
-    document.execCommand("copy");
-    copyBtn.textContent = "✅ Copied!";
-    setTimeout(() => copyBtn.textContent = "📋 Copy", 2000);
-  };
+        document.body.appendChild(form);
+        form.submit();
 
-  proceedBtn.onclick = () => {
-    const code = generatedCode.value;
-    const stake = parseInt(privateStake.value);
-    if (!Number.isInteger(stake) || stake < 10 || stake % 10 !== 0) {
-      return alert("Stake must be at least 10 and a multiple of 10.");
-    }
-    const redirect = `/online.html?mode=private&room=${code}&stake=${stake}`;
-    makeMpesaPayment(stake, redirect);
-  };
-
-  joinRoomBtn.onclick = () => {
-    const code = roomCodeInput.value.trim().toUpperCase();
-    const stake = parseInt(privateStake.value);
-    if (!code) return alert("Room code is required.");
-    if (!Number.isInteger(stake) || stake < 10 || stake % 10 !== 0) {
-      return alert("Stake must be at least 10 and a multiple of 10.");
-    }
-    localStorage.setItem("roomCode", code);
-    const redirect = `/online.html?mode=private&room=${code}&stake=${stake}`;
-    makeMpesaPayment(stake, redirect);
-  };
-
-  async function makeMpesaPayment(amount, redirectUrl) {
-    const phone = prompt("Enter your M-Pesa phone number (07XXXXXXXX):");
-    if (!/^07\d{8}$/.test(phone)) {
-      alert("Invalid phone number format.");
-      return;
+      } catch (err) {
+        alert("Payment initiation failed.");
+        console.error(err);
+      }
     }
 
-    alert(`Sending STK push to ${phone}...`);
-    localStorage.setItem("playerPhone", phone); // Optionally store for later use
+    // Hook buttons to payment
+    document.getElementById("joinRandomBtn").onclick = function () {
+      makeMpesaPayment(20, "online.html?mode=random&stake=20");
+    };
 
-    // Immediately redirect to lobby or match room
-    window.location.href = redirectUrl;
-  }
+    document.getElementById("createRoomBtn").onclick = function () {
+      const stake = parseInt(document.getElementById("privateStake").value);
+      if (stake < 10 || stake % 10 !== 0) {
+        alert("Stake must be at least 10 and a multiple of 10.");
+        return;
+      }
+
+      const roomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+      document.getElementById("generatedCode").value = roomCode;
+      document.getElementById("roomCodeDisplay").classList.remove("hidden");
+
+      // You can store roomCode and stake for further use if needed
+      document.getElementById("proceedBtn").onclick = function () {
+        makeMpesaPayment(stake, `online.html?mode=private&code=${roomCode}&stake=${stake}`);
+      };
+    };
+  });
 </script>
+
 
 </body>
 </html>
